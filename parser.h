@@ -52,5 +52,6 @@ Program* init_program();
 ParseErr parse(FILE* source, Program* prog);
 void annihilate_program(Program** prog);
 void print_instruction(const Inst* inst);
+char* err_to_str(ParseErr);
 
 #endif

@@ -68,18 +68,17 @@ ParseErr parse(FILE* source, Program* prog) {
             continue;
         }
 
-        size_t repeated = 1;
-        int next_ch;
+        // if the previous instruction is the same
+        // we consider incr times on the previous instruction
+        // instead of adding it to the program
+        Inst curr_inst = {.kind = kind, .idx = prog->size, .times = 1};
+        Inst* prev_inst = prog->size > 0 ? &prog->instructions[prog->size - 1] : NULL;
 
-        while((next_ch = fgetc(source)) != EOF && next_ch == curr_ch) {
-            repeated++;
+        if(prev_inst != NULL && prev_inst->kind == kind) {
+            prev_inst->times++;
+        } else {
+            push_inst(prog, curr_inst);
         }
-        // go back to the previous char
-        // since that isn't equal to our current instruction
-        ungetc(next_ch, source);
-
-        Inst inst = {.kind = kind, .idx = prog->size, .times = repeated};
-        push_inst(prog, inst);
     }
 
     if(loop_depth > 0) {
@@ -172,4 +171,17 @@ void print_instruction(const Inst* inst) {
         printf(", JumpStart: %zu", inst->start_idx);
     }
     printf("}\n");
+}
+
+char* err_to_str(ParseErr err) {
+    switch(err) {
+    case ParseErr_UnbalancedBrackets:
+        return "ERROR: unbalanced brackets in bf source";
+        break;
+    case ParseErr_InfiniteLoop:
+        return "ERROR: potential infinite loop in bf source";
+        break;
+    default:
+        return NULL;
+    }
 }
