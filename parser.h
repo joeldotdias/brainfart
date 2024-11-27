@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#define LOG_FATAL(fmt, ...) (fprintf(stderr, fmt "\n", ##__VA_ARGS__), exit(EXIT_FAILURE))
+
 #define INITIAL_PROG_CAPACITY 1024
 #define MAX_PROG_LEN 4096
 

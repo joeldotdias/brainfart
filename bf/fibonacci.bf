@@ -1,3 +1,4 @@
+
 +++++++++++ number of digits to output
 > #1
 + initial number

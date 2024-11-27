@@ -1,13 +1,9 @@
-#include "compiler.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "compiler.h"
 #include "parser.h"
-
-// more stupidity
-const char* ASM_START = "_asm/x86_64_start.s";
-const char* ASM_END = "_asm/x86_64_end.s";
 
 // helpers
 static char* read_file(const char* path);
@@ -89,9 +85,21 @@ void parse_and_compile(const char* filepath) {
     char* asm_end = read_file(ASM_END);
 
     EMIT("%s", asm_start);
+    /* int was = 0; */
     for(size_t i = 0; i < prog->size; i++) {
         write_inst_asm(out_file, &prog->instructions[i]);
+        /* Inst* curr = &prog->instructions[i]; */
+        /* if(curr->kind == INST_LOOP_START || curr->kind == INST_LOOP_END) { */
+        /*     if(curr->times > 1) { */
+        /*         was = 1; */
+        /*         print_instruction(curr); */
+        /*     } */
+        /* } */
+        print_instruction(&prog->instructions[i]);
     }
+    /* if(was == 0) { */
+    /*     printf("Nothing\n"); */
+    /* } */
 
     EMIT("%s", asm_end);
 
